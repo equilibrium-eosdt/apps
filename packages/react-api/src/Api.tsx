@@ -102,11 +102,16 @@ async function retrieve (api: ApiPromise, injectedPromise: Promise<InjectedExten
   ]);
 
   // HACK Horrible hack to try and give some window to the DOT denomination
-  const properties = api.genesisHash.eq(POLKADOT_GENESIS)
+  let properties = api.genesisHash.eq(POLKADOT_GENESIS)
     ? bestHeader.number.toBn().gte(POLKADOT_DENOM_BLOCK)
       ? registry.createType('ChainProperties', { ...chainProperties, tokenDecimals: 10, tokenSymbol: 'DOT' })
       : registry.createType('ChainProperties', { ...chainProperties, tokenDecimals: 12, tokenSymbol: 'DOT (old)' })
     : chainProperties;
+
+  // TODO exclude in commit hack correct decimals for equilibrium
+  if (['Equilibrium', 'node-template'].includes(api.runtimeVersion?.specName?.toString())) {
+    properties = registry.createType('ChainProperties', { ...chainProperties, tokenDecimals: 9, tokenSymbol: 'EQ' });
+  }
 
   return {
     injectedAccounts,

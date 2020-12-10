@@ -16,5 +16,6 @@ export default {
   moonbeam,
   'moonbeam-standalone': moonbeam,
   'node-moonbeam': moonbeam,
+  'node-template': equilibrium,
   'sora-substrate': soraSubstrate
 };
